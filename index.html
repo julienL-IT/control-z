@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Control Z · Pilotez votre hybride Z</title>
+<meta name="description" content="Control Z, l'app iPhone et iPad pour piloter votre hybride de la gamme Z : retour image en direct, enregistrement et tous les réglages. Assistance et politique de confidentialité.">
+<meta property="og:title" content="Control Z · Pilotez votre hybride Z">
+<meta property="og:description" content="Retour image en direct, enregistrement et tous les réglages de votre hybride Z sur iPhone et iPad.">
+<meta property="og:image" content="https://julienl-it.github.io/control-z/icon.png">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+  /* Direction « plateau de tournage » : nuit bleutée, accent ambre (repris de l'icône), captures paysage. */
+  :root {
+    --bg: #07080D; --bg2: #0E1019; --surface: #151824; --chip: #1E2230; --line: #262B3B;
+    --ink: #F4F5F8; --ink2: #B7BCCB; --ink3: #7D8396;
+    --amber: #FFB23E; --amber-ink: #1A1206; --amber-soft: rgba(255, 178, 62, .12);
+    --rec: #E5302F; --blue: #3B96F8;
+    --shadow: 0 20px 50px rgba(0, 0, 0, .55);
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 17px; line-height: 1.6; }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: var(--amber); font-weight: 600; }
+  a:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+  h1, h2, h3 { font-weight: 800; line-height: 1.1; margin: 0; letter-spacing: -.02em; text-wrap: balance; }
+  p { margin: 0; }
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+  section.block { padding: 72px 0; border-top: 1px solid var(--line); }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: .78rem; font-weight: 700;
+             letter-spacing: .1em; text-transform: uppercase; color: var(--amber); margin-bottom: 14px; }
+  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--rec); box-shadow: 0 0 0 4px rgba(229, 48, 47, .2); }
+  .section-title { font-size: clamp(2rem, 4.5vw, 2.8rem); margin-bottom: 12px; }
+  .lead { color: var(--ink2); font-size: 1.08rem; max-width: 680px; }
+
+  .topbar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 82%, transparent);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+  .topbar .bar { display: flex; align-items: center; gap: 16px; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 800; font-size: 1.15rem; }
+  .brand img { width: 34px; height: 34px; border-radius: 9px; }
+  .topbar nav { margin-left: auto; display: flex; gap: 2px; }
+  .topbar nav a { color: var(--ink3); text-decoration: none; font-weight: 600; font-size: .92rem; padding: 8px 12px; border-radius: 10px; }
+  .topbar nav a:hover { color: var(--ink); background: var(--chip); }
+  @media (max-width: 680px) { .topbar nav a.opt { display: none; } .topbar nav a { padding: 8px 8px; } }
+
+  .btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 700; border-radius: 12px;
+         padding: 13px 22px; background: var(--amber); color: var(--amber-ink); }
+  .btn.ghost { background: var(--chip); color: var(--ink); }
+
+  .hero { padding: 72px 0 40px; background:
+          radial-gradient(70% 60% at 50% 30%, rgba(255, 158, 40, .14), transparent 70%),
+          linear-gradient(180deg, var(--bg2), var(--bg)); }
+  .hero .top { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .hero .app { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+  .hero .app img { width: 72px; height: 72px; border-radius: 17px; box-shadow: var(--shadow); }
+  .badge { font-family: var(--mono); font-size: .8rem; color: var(--ink2); background: var(--chip); border: 1px solid var(--line); padding: 5px 12px; border-radius: 999px; }
+  .hero h1 { font-size: clamp(2.4rem, 6.5vw, 4.2rem); margin-bottom: 16px; max-width: 900px; }
+  .hero h1 em { font-style: normal; color: var(--amber); }
+  .hero p.tag { font-size: 1.15rem; color: var(--ink2); max-width: 640px; margin-bottom: 28px; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+
+  /* Capture paysage dans un cadre d'iPhone */
+  .device { padding: 10px; background: #0B0C10; border: 1px solid #2A2F3E; border-radius: 34px; box-shadow: var(--shadow); }
+  .device img { border-radius: 25px; }
+  .hero .device { margin: 48px auto 0; max-width: 980px; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 32px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+  .tile .k { font-family: var(--mono); font-size: .75rem; color: var(--amber); letter-spacing: .08em; text-transform: uppercase; }
+  .tile h3 { font-size: 1.22rem; margin: 8px 0 6px; }
+  .tile p { font-size: .97rem; color: var(--ink2); }
+
+  .shots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 34px; }
+  @media (max-width: 760px) { .shots { grid-template-columns: 1fr; } }
+  .shots figure { margin: 0; }
+  .shots figcaption { color: var(--ink3); font-size: .9rem; margin-top: 10px; text-align: center; }
+
+  .models { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .models span { font-family: var(--mono); font-size: .88rem; background: var(--chip); border: 1px solid var(--line); padding: 5px 11px; border-radius: 8px; }
+
+  .faq { margin-top: 28px; display: grid; gap: 10px; }
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 2px 20px; }
+  summary { cursor: pointer; font-weight: 700; padding: 15px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; flex: none; color: var(--amber-ink); background: var(--amber); width: 24px; height: 24px; border-radius: 7px; text-align: center; line-height: 24px; font-weight: 800; }
+  details[open] summary::after { content: "–"; }
+  details > div { padding: 0 0 18px; color: var(--ink2); }
+  details ol, details ul { margin: 8px 0 0; padding-left: 22px; }
+  details li + li { margin-top: 4px; }
+  code { font-family: var(--mono); background: var(--chip); padding: 2px 6px; border-radius: 6px; font-size: .88em; color: var(--ink); }
+
+  .contact { margin-top: 22px; border-radius: 16px; padding: 18px 22px; background: var(--amber-soft); border: 1px solid rgba(255, 178, 62, .35); }
+  .contact strong { display: block; font-size: 1.1rem; margin-bottom: 2px; }
+
+  .legal .doc { max-width: 800px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 34px clamp(20px, 4vw, 44px); margin-top: 24px; }
+  .legal h3 { font-size: 1.25rem; margin: 30px 0 8px; }
+  .legal p, .legal li { color: var(--ink2); }
+  .legal ul { padding-left: 22px; }
+  .legal .updated { color: var(--ink3); font-family: var(--mono); font-size: .85rem; }
+  .summary-box { margin-top: 18px; border-radius: 14px; padding: 16px 20px; background: var(--amber-soft); border: 1px solid rgba(255, 178, 62, .35); color: var(--ink); }
+
+  footer { padding: 36px 0 52px; color: var(--ink3); font-size: .88rem; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap bar">
+    <a class="brand" href="#"><img src="icon.png" alt="">Control Z</a>
+    <nav>
+      <a class="opt" href="#fonctions">Fonctions</a>
+      <a href="#assistance">Assistance</a>
+      <a href="#confidentialite">Confidentialité</a>
+      <a href="#english" lang="en">English</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="top">
+        <div class="app"><img src="icon.png" alt="Icône de Control Z"><span class="badge">iPhone · iPad · App Store</span></div>
+        <h1>Votre hybride Z, <em>piloté depuis l'iPhone.</em></h1>
+        <p class="tag">Retour image en direct, enregistrement à distance et tous les réglages de votre appareil, en USB-C ou en Wi-Fi.</p>
+        <div class="ctas">
+          <a class="btn" href="#assistance">Assistance</a>
+          <a class="btn ghost" href="#confidentialite">Confidentialité</a>
+        </div>
+      </div>
+      <div class="device"><img src="img/shot-2.jpg" alt="Live view pendant un enregistrement : timecode, vu-mètres et histogramme"></div>
+    </div>
+  </section>
+
+  <section class="block" id="fonctions">
+    <div class="wrap">
+      <span class="eyebrow">Fonctions</span>
+      <h2 class="section-title">Un moniteur et une télécommande, sans câble HDMI.</h2>
+      <p class="lead">Control Z s'appuie sur le protocole de contrôle documenté pour les boîtiers de la gamme Z. L'app lit les réglages directement sur votre appareil.</p>
+      <div class="grid">
+        <div class="tile"><span class="k">Live view</span><h3>Retour image en direct</h3><p>L'image de l'appareil en grand, avec focale, cadence, vitesse ou angle, iris, ISO, balance des blancs, exposition et batterie.</p></div>
+        <div class="tile"><span class="k">REC</span><h3>Enregistrement à distance</h3><p>Démarrez et arrêtez l'enregistrement. L'app vérifie la carte et le mode, et affiche timecode, vu-mètres et histogramme.</p></div>
+        <div class="tile"><span class="k">Réglages</span><h3>Tous les menus</h3><p>Codec, définition, cadence, N-Log, HLG, Picture Control, audio, menus perso… uniquement ceux de l'appareil connecté.</p></div>
+        <div class="tile"><span class="k">Focus</span><h3>Mise au point au doigt</h3><p>Touchez l'image pour placer la zone AF, choisissez AF-S, AF-C, AF-F ou MF, pilotez la mise au point motorisée.</p></div>
+        <div class="tile"><span class="k">Zoom</span><h3>Zoom motorisé</h3><p>Avec un objectif à zoom motorisé : maintenez W ou T et réglez la vitesse.</p></div>
+        <div class="tile"><span class="k">USB-C · Wi-Fi</span><h3>Deux façons de se connecter</h3><p>Câble USB-C direct, ou Wi-Fi avec détection automatique de l'appareil et appairage par code.</p></div>
+      </div>
+      <div class="shots" aria-label="Captures d'écran">
+        <figure><div class="device"><img src="img/shot-1.jpg" alt="Live view et bandeau d'informations" loading="lazy"></div><figcaption>Live view et bandeau d'informations</figcaption></figure>
+        <figure><div class="device"><img src="img/shot-3.jpg" alt="Choix de la vitesse d'obturation" loading="lazy"></div><figcaption>Vitesse, iris, ISO en un geste</figcaption></figure>
+        <figure><div class="device"><img src="img/shot-4.jpg" alt="Panneau de mise au point" loading="lazy"></div><figcaption>Mise au point et MF motorisée</figcaption></figure>
+        <figure><div class="device"><img src="img/shot-6.jpg" alt="Onglet Réglages" loading="lazy"></div><figcaption>Tous les réglages du boîtier</figcaption></figure>
+      </div>
+      <h3 style="margin-top:44px">Boîtiers compatibles</h3>
+      <div class="models"><span>ZR</span><span>Z9</span><span>Z8</span><span>Z6III</span><span>Z7II</span><span>Z6II</span><span>Z7</span><span>Z6</span><span>Z5II</span><span>Z5IIC</span><span>Z5</span><span>Zf</span><span>Z50II</span><span>Z50</span><span>Z30</span><span>Zfc</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="assistance">
+    <div class="wrap">
+      <span class="eyebrow">Assistance</span>
+      <h2 class="section-title">Besoin d'aide ?</h2>
+      <p class="lead">Les réponses aux questions les plus fréquentes. Si votre problème n'y figure pas, écrivez-nous (voir en bas de section).</p>
+      <div class="faq">
+        <details open>
+          <summary>Comment connecter mon appareil en USB-C ?</summary>
+          <div>
+            <ol>
+              <li>Allumez l'appareil et reliez-le au port USB-C de l'iPhone ou de l'iPad avec un câble USB-C de données.</li>
+              <li>Ouvrez Control Z : l'appareil apparaît dans la carte « USB-C ». Touchez-le.</li>
+              <li>Au premier lancement, autorisez Control Z à contrôler l'appareil.</li>
+            </ol>
+            Si l'appareil n'apparaît pas, vérifiez que le câble transfère bien les données (et pas seulement la charge) et fermez les autres apps qui accèdent à l'appareil.
+          </div>
+        </details>
+        <details>
+          <summary>Comment connecter mon appareil en Wi-Fi ?</summary>
+          <div>
+            <ol>
+              <li>Sur l'appareil : menu Réseau › Connexion à l'ordinateur › Paramètres réseau › Créer un profil. Choisissez votre réseau Wi-Fi (ou une connexion directe), puis activez la connexion.</li>
+              <li>L'iPhone ou l'iPad doit être sur le même réseau Wi-Fi (pas un réseau invité, qui isole souvent les appareils).</li>
+              <li>Dans Control Z, l'appareil apparaît dans la carte « Wi-Fi » avec la mention « Appairage requis ». Touchez « Appairer ».</li>
+              <li>Vérifiez que le code affiché dans l'app est le même que sur l'écran de l'appareil, touchez « Le code est identique », puis validez sur l'appareil.</li>
+              <li>L'app se reconnecte automatiquement quelques secondes plus tard. Les fois suivantes, touchez simplement « Connecter ».</li>
+            </ol>
+          </div>
+        </details>
+        <details>
+          <summary>« Connexion refusée par l'appareil (code 1) »</summary>
+          <div>Chaque profil réseau de l'appareil ne peut être appairé qu'avec <strong>un seul</strong> appareil (un ordinateur ou un iPhone). Si votre profil est déjà appairé avec un ordinateur, créez un nouveau profil « Connexion à l'ordinateur » dédié à votre iPhone ou iPad, activez-le, puis appairez-le depuis l'app.</div>
+        </details>
+        <details>
+          <summary>L'app ne trouve pas l'appareil sur le réseau</summary>
+          <div>
+            <ul>
+              <li>Vérifiez dans Réglages iOS › Confidentialité et sécurité › Réseau local que Control Z est autorisé.</li>
+              <li>Vérifiez que la connexion est active sur l'appareil et que les deux sont sur le même réseau.</li>
+              <li>Vous pouvez aussi saisir l'adresse IP de l'appareil dans « Adresse IP manuelle » (elle figure dans les informations du profil réseau, sur l'appareil).</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary>Pourquoi le retour image n'est-il pas en Full HD ?</summary>
+          <div>Le protocole de contrôle des boîtiers Z fournit un retour image en JPEG jusqu'à 1024 × 768 pixels. C'est la définition maximale disponible par USB et Wi-Fi ; l'enregistrement sur la carte n'est évidemment pas concerné.</div>
+        </details>
+        <details>
+          <summary>L'enregistrement ne démarre pas</summary>
+          <div>L'app affiche la raison donnée par l'appareil : carte absente, pleine ou protégée, appareil en mode photo, affichage agrandi actif, codec non compatible avec la carte (ProRes ou RAW sur carte SD), etc. Corrigez le point indiqué puis réessayez.</div>
+        </details>
+        <details>
+          <summary>Certains réglages n'apparaissent pas</summary>
+          <div>Control Z n'affiche que les réglages de l'appareil connecté, et seulement ceux que l'appareil accepte dans son état actuel (mode photo ou vidéo, mode d'exposition, objectif monté…). Changer de mode sur l'appareil peut faire apparaître d'autres réglages.</div>
+        </details>
+        <details>
+          <summary>Puis-je essayer l'app sans appareil ?</summary>
+          <div>Oui : sur l'écran d'accueil, touchez « Mode démo (sans appareil) » pour découvrir l'interface avec un appareil simulé.</div>
+        </details>
+      </div>
+      <div class="contact">
+        <strong>Contacter le développeur</strong>
+        Ouvrez une demande sur <a href="https://github.com/julienL-IT/control-z/issues">GitHub</a>, ou depuis l'App Store : page de l'app › « Assistance de l'app ».
+      </div>
+    </div>
+  </section>
+
+  <section class="block legal" id="confidentialite">
+    <div class="wrap">
+      <span class="eyebrow">Confidentialité</span>
+      <h2 class="section-title">Politique de confidentialité</h2>
+      <div class="doc">
+        <p class="updated">Dernière mise à jour : 14 novembre 2026</p>
+        <div class="summary-box">
+          <strong>En bref :</strong> Control Z ne collecte aucune donnée personnelle. L'app communique uniquement avec votre appareil photo, en USB-C ou sur votre réseau local. Rien n'est envoyé au développeur ni à des tiers.
+        </div>
+
+        <h3>Communications</h3>
+        <p>L'app échange uniquement avec l'appareil photo que vous connectez : par câble USB-C, ou en Wi-Fi sur votre réseau local (protocole PTP/IP). Elle ne se connecte à aucun serveur sur Internet.</p>
+
+        <h3>Autorisations demandées</h3>
+        <ul>
+          <li><strong>Contrôle des appareils photo (USB)</strong> : nécessaire pour piloter l'appareil branché en USB-C.</li>
+          <li><strong>Réseau local</strong> : nécessaire pour détecter et piloter l'appareil en Wi-Fi.</li>
+        </ul>
+
+        <h3>Données stockées sur votre iPhone ou iPad</h3>
+        <ul>
+          <li>Un identifiant d'appairage généré aléatoirement à l'installation, utilisé par l'appareil photo pour reconnaître votre iPhone ou iPad.</li>
+          <li>La dernière adresse IP saisie manuellement, le cas échéant.</li>
+        </ul>
+        <p>Ces données restent sur votre appareil et sont supprimées avec l'app.</p>
+
+        <h3>Images et fichiers</h3>
+        <p>Le retour image et les vignettes de la carte mémoire sont affichés en direct et ne sont ni enregistrés ni transmis ailleurs. Les fichiers restent sur la carte de votre appareil photo.</p>
+
+        <h3>Ce que l'app ne fait pas</h3>
+        <ul>
+          <li>Aucun compte, aucune publicité.</li>
+          <li>Aucun outil de statistiques, de suivi ou de mesure d'audience.</li>
+          <li>Aucune donnée vendue ou partagée avec des tiers.</li>
+        </ul>
+
+        <h3>Enfants</h3>
+        <p>L'app ne collecte aucune donnée, y compris auprès des enfants.</p>
+
+        <h3>Contact</h3>
+        <p>Pour toute question sur cette politique : <a href="https://github.com/julienL-IT/control-z/issues">GitHub</a> ou la page App Store de l'app › « Assistance de l'app ».</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block legal" id="english" lang="en">
+    <div class="wrap">
+      <span class="eyebrow">English</span>
+      <h2 class="section-title">Support &amp; privacy</h2>
+      <div class="doc">
+        <h3 id="support-en">Support</h3>
+        <ul>
+          <li><strong>USB-C:</strong> turn the camera on, connect it to the iPhone or iPad with a USB-C data cable, then tap it in the “USB-C” card and allow Control Z to control the camera.</li>
+          <li><strong>Wi-Fi:</strong> on the camera, open Network › Connect to computer › Network settings › Create profile, join your Wi-Fi network (or use a direct connection) and enable the connection. In Control Z, tap “Appairer” (Pair), check that the code matches the camera screen, then confirm on the camera. The app reconnects automatically.</li>
+          <li><strong>“Connection refused (code 1)”:</strong> each camera network profile can be paired with only one device. Create a new profile dedicated to your iPhone or iPad.</li>
+          <li><strong>Camera not found:</strong> allow Control Z in iOS Settings › Privacy &amp; Security › Local Network, and make sure both devices are on the same network.</li>
+          <li><strong>Live view resolution:</strong> the camera control protocol provides live view up to 1024 × 768 pixels.</li>
+          <li><strong>No camera?</strong> Tap “Mode démo” on the home screen to try the app with a simulated camera.</li>
+        </ul>
+        <p>Contact: open an issue on <a href="https://github.com/julienL-IT/control-z/issues">GitHub</a>, or use “App Support” on the App Store page.</p>
+
+        <h3 id="privacy-en">Privacy policy</h3>
+        <p class="updated">Last updated: November 14, 2026</p>
+        <p>Control Z does not collect any personal data. The app only communicates with your camera, over USB-C or your local network, and never connects to Internet servers. It requests camera-control (USB) and Local Network permissions solely to control your camera. A random pairing identifier and the last manually entered IP address are stored on your device only and are deleted with the app. Live view images and card thumbnails are displayed in real time and are neither saved nor sent anywhere. No account, no ads, no analytics, no tracking, no data shared with third parties.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Julien Lamadon · Control Z</span>
+    <span>Application indépendante, non affiliée à Nikon Corporation. Nikon et Nikon Z sont des marques de Nikon Corporation.</span>
+  </div>
+</footer>
+
+</body>
+</html>
