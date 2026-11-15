@@ -52,7 +52,11 @@
   .topbar nav { margin-left: auto; display: flex; gap: 2px; }
   .topbar nav a { color: var(--ink3); text-decoration: none; font-weight: 600; font-size: .92rem; padding: 8px 12px; border-radius: 10px; }
   .topbar nav a:hover { color: var(--ink); background: var(--chip); }
+  .brand span { white-space: nowrap; }
+  .topbar nav { min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .topbar nav a { white-space: nowrap; }
   @media (max-width: 680px) { .topbar nav a.opt { display: none; } .topbar nav a { padding: 8px 8px; } }
+  @media (max-width: 520px) { .brand span { display: none; } .topbar nav a { font-size: .84rem; padding: 7px 6px; } }
 
   .btn { font-family: var(--display); display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 700; border-radius: 12px;
          padding: 13px 22px; background: var(--amber); color: var(--amber-ink); }
@@ -120,7 +124,7 @@
 
 <header class="topbar">
   <div class="wrap bar">
-    <a class="brand" href="#"><img src="icon.png" alt="">Control Z</a>
+    <a class="brand" href="#"><img src="icon.png" alt=""><span>Control Z</span></a>
     <nav>
       <a class="opt" href="#fonctions">Fonctions</a>
       <a href="#assistance">Assistance</a>
