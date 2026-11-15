@@ -10,6 +10,9 @@
 <meta property="og:image" content="https://julienl-it.github.io/control-z/icon.png">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   /* Direction « plateau de tournage » : nuit bleutée, accent ambre (repris de l'icône), captures paysage. */
   :root {
@@ -18,7 +21,9 @@
     --amber: #FFB23E; --amber-ink: #1A1206; --amber-soft: rgba(255, 178, 62, .12);
     --rec: #E5302F; --blue: #3B96F8;
     --shadow: 0 20px 50px rgba(0, 0, 0, .55);
-    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+    /* Typographie de l'app : Nunito (titres, boutons) + Roboto (texte courant) */
+    --display: "Nunito", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+    --font: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
     color-scheme: dark;
   }
@@ -28,7 +33,7 @@
   img { max-width: 100%; height: auto; display: block; }
   a { color: var(--amber); font-weight: 600; }
   a:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
-  h1, h2, h3 { font-weight: 800; line-height: 1.1; margin: 0; letter-spacing: -.02em; text-wrap: balance; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 900; line-height: 1.1; margin: 0; letter-spacing: -.02em; text-wrap: balance; }
   p { margin: 0; }
   .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
   section.block { padding: 72px 0; border-top: 1px solid var(--line); }
@@ -42,14 +47,14 @@
   .topbar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 82%, transparent);
             backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
   .topbar .bar { display: flex; align-items: center; gap: 16px; height: 64px; }
-  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 800; font-size: 1.15rem; }
+  .brand { font-family: var(--display); display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 800; font-size: 1.15rem; }
   .brand img { width: 34px; height: 34px; border-radius: 9px; }
   .topbar nav { margin-left: auto; display: flex; gap: 2px; }
   .topbar nav a { color: var(--ink3); text-decoration: none; font-weight: 600; font-size: .92rem; padding: 8px 12px; border-radius: 10px; }
   .topbar nav a:hover { color: var(--ink); background: var(--chip); }
   @media (max-width: 680px) { .topbar nav a.opt { display: none; } .topbar nav a { padding: 8px 8px; } }
 
-  .btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 700; border-radius: 12px;
+  .btn { font-family: var(--display); display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 700; border-radius: 12px;
          padding: 13px 22px; background: var(--amber); color: var(--amber-ink); }
   .btn.ghost { background: var(--chip); color: var(--ink); }
 
@@ -88,7 +93,7 @@
 
   .faq { margin-top: 28px; display: grid; gap: 10px; }
   details { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 2px 20px; }
-  summary { cursor: pointer; font-weight: 700; padding: 15px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary { font-family: var(--display); font-size: 1.05rem; cursor: pointer; font-weight: 800; padding: 15px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
   summary::-webkit-details-marker { display: none; }
   summary::after { content: "+"; flex: none; color: var(--amber-ink); background: var(--amber); width: 24px; height: 24px; border-radius: 7px; text-align: center; line-height: 24px; font-weight: 800; }
   details[open] summary::after { content: "–"; }
@@ -98,7 +103,7 @@
   code { font-family: var(--mono); background: var(--chip); padding: 2px 6px; border-radius: 6px; font-size: .88em; color: var(--ink); }
 
   .contact { margin-top: 22px; border-radius: 16px; padding: 18px 22px; background: var(--amber-soft); border: 1px solid rgba(255, 178, 62, .35); }
-  .contact strong { display: block; font-size: 1.1rem; margin-bottom: 2px; }
+  .contact strong { font-family: var(--display); display: block; font-size: 1.1rem; margin-bottom: 2px; }
 
   .legal .doc { max-width: 800px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 34px clamp(20px, 4vw, 44px); margin-top: 24px; }
   .legal h3 { font-size: 1.25rem; margin: 30px 0 8px; }
